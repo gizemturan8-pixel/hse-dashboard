@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<!-- saved from url=(0060)file:///C:/Users/Gizem/Downloads/HSE_Dashboard_Firebase.html -->
+<html lang="tr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HSE Team — Görev Takip</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#F1F5F9;min-height:100vh}
+button,select,input,textarea{font-family:inherit}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:#F1F5F9}::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:3px}
+#app{padding:14px;max-width:900px;margin:0 auto}
+.header{background:linear-gradient(135deg,#1E3A5F,#2563EB);border-radius:12px;padding:13px 18px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.header-title{color:#fff;font-size:17px;font-weight:700;margin-top:2px}
+.header-sub{color:#93C5FD;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase}
+.header-btns{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.btn-gold{background:#FBBF24;border:none;border-radius:8px;padding:7px 13px;font-size:12px;font-weight:700;cursor:pointer;color:#1E3A5F}
+.btn-ghost{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:7px 12px;font-size:12px;color:#fff;cursor:pointer;font-weight:600}
+.sync-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px}
+.sync-dot.live{background:#4ADE80;box-shadow:0 0 6px #4ADE80}
+.sync-dot.loading{background:#FBBF24}
+.sync-dot.offline{background:#EF4444}
+.tabs{background:#fff;border-radius:10px;padding:5px 6px;margin-bottom:10px;display:flex;gap:3px;flex-wrap:wrap;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.tab{padding:8px 15px;border-radius:8px;border:none;cursor:pointer;font-weight:700;font-size:13px;background:transparent;color:#6B7280;transition:all .15s}
+.tab.active{background:#1E3A5F;color:#fff}
+.tab .cnt{margin-left:4px;background:#E5E7EB;color:#374151;padding:1px 6px;border-radius:8px;font-size:11px}
+.tab.active .cnt{background:rgba(255,255,255,.2);color:#fff}
+.stat-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.stat{background:#fff;border-radius:10px;padding:12px 14px;flex:1;min-width:90px;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.stat-val{font-size:24px;font-weight:700;line-height:1}
+.stat-label{font-size:11px;font-weight:600;color:#374151;margin-top:2px}
+.stat-sub{font-size:10px;color:#9CA3AF;margin-top:1px}
+.card{background:#fff;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.06);margin-bottom:7px}
+.card-inner{padding:10px 12px}
+.task-row{display:flex;align-items:flex-start;gap:7px}
+.task-text{font-size:13px;font-weight:600;color:#111827;line-height:1.4;cursor:pointer}
+.task-detail{margin-top:7px;padding:8px 10px;background:#F9FAFB;border-radius:7px;font-size:12px;color:#4B5563;line-height:1.7}
+.task-note{margin-top:4px;padding:5px 8px;background:#FEF3C7;border-radius:5px}
+.task-badges{display:flex;flex-direction:column;align-items:flex-end;gap:4px;min-width:86px}
+.task-actions{display:flex;gap:4px;margin-top:3px}
+.quick-btns{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap}
+.badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;white-space:nowrap;display:inline-block}
+.bar-wrap{display:flex;align-items:center;gap:5px;margin-top:6px}
+.bar-track{flex:1;height:5px;background:#E5E7EB;border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;transition:width .3s}
+.bar-pct{font-size:10px;color:#6B7280;width:26px;text-align:right}
+.alert-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:12px 15px;margin-bottom:10px}
+.alert-title{font-weight:700;color:#991B1B;margin-bottom:8px;font-size:13px}
+.alert-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-top:1px solid #FCA5A5;font-size:12px;gap:8px}
+.person-row{display:flex;align-items:center;gap:8px;padding:7px 11px;border-radius:8px;border:1px solid #E5E7EB;background:#F9FAFB;cursor:pointer;margin-bottom:6px}
+.person-row.has-delay{background:#FFF7F7;border-color:#FECACA}
+.person-name{width:78px;font-weight:600;font-size:12px;color:#374151}
+.person-badges{flex:1;display:flex;gap:5px;flex-wrap:wrap}
+.team-card{background:#fff;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.06);margin-bottom:8px;overflow:hidden}
+.team-header{padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #E5E7EB;flex-wrap:wrap;gap:6px}
+.team-header.ok{background:#F0FDF4}.team-header.warn{background:#FFF5F5}
+.team-body{padding:6px 8px}
+.team-task-row{display:flex;align-items:center;gap:6px;padding:5px 7px;border-radius:7px;margin-bottom:4px}
+.team-task-row.delay{background:#FFF7F7}.team-task-row.normal{background:#F9FAFB}
+.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.filters{background:#fff;border-radius:10px;padding:8px 11px;margin-bottom:8px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.filter-input{flex:1;min-width:130px;border:1px solid #E5E7EB;border-radius:7px;padding:6px 9px;font-size:12px;outline:none}
+.filter-input:focus{border-color:#2563EB}
+.filter-select{border:1px solid #E5E7EB;border-radius:7px;padding:6px 8px;font-size:12px;outline:none;background:#fff}
+.btn-clear{background:#F3F4F6;border:none;border-radius:7px;padding:6px 9px;font-size:12px;cursor:pointer;color:#6B7280}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:#fff;border-radius:14px;padding:22px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.field{margin-bottom:11px}
+.field label{font-size:12px;font-weight:600;color:#374151;display:block;margin-bottom:3px}
+.field input,.field select,.field textarea{width:100%;border:1px solid #D1D5DB;border-radius:7px;padding:7px 10px;font-size:13px;outline:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#2563EB}
+.field textarea{resize:vertical}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.range-labels{display:flex;justify-content:space-between;font-size:10px;color:#9CA3AF;margin-top:2px}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
+.btn-cancel{padding:8px 16px;border-radius:8px;border:1px solid #E5E7EB;background:#fff;cursor:pointer;font-size:13px;color:#6B7280}
+.btn-save{padding:8px 22px;border-radius:8px;border:none;background:#2563EB;color:#fff;cursor:pointer;font-size:13px;font-weight:700}
+.btn-del-confirm{padding:8px 16px;border-radius:8px;border:none;background:#EF4444;color:#fff;cursor:pointer;font-size:13px;font-weight:700}
+.btn-edit{background:#EFF6FF;border:none;border-radius:5px;padding:3px 7px;font-size:11px;cursor:pointer;color:#2563EB}
+.btn-del{background:#FEF2F2;border:none;border-radius:5px;padding:3px 7px;font-size:11px;cursor:pointer;color:#EF4444}
+.btn-qs{border:none;border-radius:6px;padding:3px 9px;font-size:11px;cursor:pointer;font-weight:600}
+.toast{position:fixed;top:16px;right:16px;z-index:200;background:#1E3A5F;color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.2);pointer-events:none;display:none}
+.loading-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:12px;color:#6B7280;font-size:14px}
+.spinner{width:36px;height:36px;border:3px solid #E5E7EB;border-top-color:#2563EB;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.footer-note{text-align:center;padding:14px 0 6px;font-size:11px;color:#CBD5E1}
+@media(max-width:500px){.field-row{grid-template-columns:1fr}.stat{min-width:80px}}
+</style>
+</head>
+<body>
+<div id="app">
+    <div class="header">
+      <div>
+        <div class="header-sub">Alışan Lojistik</div>
+        <div class="header-title">HSE Team — Görev Takip Paneli</div>
+      </div>
+      <div class="header-btns">
+        <span style="color:rgba(255,255,255,.8);font-size:12px">
+          <span class="sync-dot live"></span>Canlı
+        </span>
+        <button class="btn-gold" onclick="openModal(&#39;new&#39;)">+ Yeni Görev</button>
+      </div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" onclick="activeTab=&#39;dash&#39;;render()">
+    📊 Dashboard
+  </button>
+      <button class="tab " onclick="activeTab=&#39;tasks&#39;;render()">
+    📋 Görev Listesi<span class="cnt">51</span>
+  </button>
+      <button class="tab " onclick="activeTab=&#39;team&#39;;render()">
+    👤 Ekip Bazlı
+  </button>
+    </div>
+    <div id="content">
+      <div class="stat-row">
+    <div class="stat" style="border-left:4px solid #EF4444">
+    <div class="stat-val" style="color:#EF4444">19</div>
+    <div class="stat-label">Geciken</div><div class="stat-sub">1 High öncelikli</div>
+  </div>
+    <div class="stat" style="border-left:4px solid #3B82F6">
+    <div class="stat-val" style="color:#3B82F6">31</div>
+    <div class="stat-label">Devam Eden</div><div class="stat-sub">Aktif görevler</div>
+  </div>
+    <div class="stat" style="border-left:4px solid #10B981">
+    <div class="stat-val" style="color:#10B981">1</div>
+    <div class="stat-label">Kapandı</div><div class="stat-sub">Tamamlanan</div>
+  </div>
+    <div class="stat" style="border-left:4px solid #8B5CF6">
+    <div class="stat-val" style="color:#8B5CF6">51</div>
+    <div class="stat-label">Toplam</div><div class="stat-sub">Tüm görevler</div>
+  </div>
+  </div><div class="alert-box">
+    <div class="alert-title">🚨 Yüksek Öncelikli Geciken Görevler (1)</div>
+    <div class="alert-row">
+      <div style="color:#991B1B;flex:1">Tehlikeli Madde Taşımacılığı İşletme Denetimleri - Dosya Düzeni</div>
+      <div style="display:flex;gap:5px;align-items:center;flex-shrink:0">
+        <span style="color:#6B7280;font-size:11px">A.Halit Ş.</span>
+        <button class="btn-qs" style="background:#DBEAFE;color:#1E40AF" onclick="quickStatus(&#39;8&#39;,&#39;On-going&#39;)">▶ Devama Al</button>
+        <button class="btn-qs" style="background:#D1FAE5;color:#065F46" onclick="quickStatus(&#39;8&#39;,&#39;Closed&#39;)">✓ Kapat</button>
+      </div></div>
+  </div><div class="card" style="padding:13px 15px">
+    <div style="font-weight:700;color:#1E3A5F;margin-bottom:10px;font-size:14px">👤 Ekip Yükü</div>
+    <div class="person-row has-delay" onclick="filterPerson=&#39;HSE Team&#39;;activeTab=&#39;tasks&#39;;render()">
+      <div class="person-name">Tüm Ekip</div>
+      <div class="person-badges">
+        <span class="badge" style="background:#FEE2E2;color:#991B1B">6 Geciken</span>
+        <span class="badge" style="background:#DBEAFE;color:#1E40AF">6 Devam</span>
+        
+      </div>
+      <div style="font-size:10px;color:#9CA3AF">12 →</div>
+    </div><div class="person-row has-delay" onclick="filterPerson=&#39;HSE Chief Samet Nibat&#39;;activeTab=&#39;tasks&#39;;render()">
+      <div class="person-name">Samet N.</div>
+      <div class="person-badges">
+        <span class="badge" style="background:#FEE2E2;color:#991B1B">4 Geciken</span>
+        <span class="badge" style="background:#DBEAFE;color:#1E40AF">4 Devam</span>
+        
+      </div>
+      <div style="font-size:10px;color:#9CA3AF">8 →</div>
+    </div><div class="person-row has-delay" onclick="filterPerson=&#39;HSE Engineer A.Halit Şimşir&#39;;activeTab=&#39;tasks&#39;;render()">
+      <div class="person-name">A.Halit Ş.</div>
+      <div class="person-badges">
+        <span class="badge" style="background:#FEE2E2;color:#991B1B">4 Geciken</span>
+        <span class="badge" style="background:#DBEAFE;color:#1E40AF">3 Devam</span>
+        
+      </div>
+      <div style="font-size:10px;color:#9CA3AF">7 →</div>
+    </div><div class="person-row has-delay" onclick="filterPerson=&#39;HSE Engineer Büşra Sevim&#39;;activeTab=&#39;tasks&#39;;render()">
+      <div class="person-name">Büşra S.</div>
+      <div class="person-badges">
+        <span class="badge" style="background:#FEE2E2;color:#991B1B">2 Geciken</span>
+        <span class="badge" style="background:#DBEAFE;color:#1E40AF">5 Devam</span>
+        
+      </div>
+      <div style="font-size:10px;color:#9CA3AF">7 →</div>
+    </div><div class="person-row has-delay" onclick="filterPerson=&#39;HSE Engineer Serkan Türkkan&#39;;activeTab=&#39;tasks&#39;;render()">
+      <div class="person-name">Serkan T.</div>
+      <div class="person-badges">
+        <span class="badge" style="background:#FEE2E2;color:#991B1B">2 Geciken</span>
+        <span class="badge" style="background:#DBEAFE;color:#1E40AF">3 Devam</span>
+        <span class="badge" style="background:#D1FAE5;color:#065F46">1 Kapandı</span>
+      </div>
+      <div style="font-size:10px;color:#9CA3AF">6 →</div>
+    </div><div class="person-row has-delay" onclick="filterPerson=&#39;HSE Engineer Mevlüt Çevik&#39;;activeTab=&#39;tasks&#39;;render()">
+      <div class="person-name">Mevlüt Ç.</div>
+      <div class="person-badges">
+        <span class="badge" style="background:#FEE2E2;color:#991B1B">1 Geciken</span>
+        <span class="badge" style="background:#DBEAFE;color:#1E40AF">3 Devam</span>
+        
+      </div>
+      <div style="font-size:10px;color:#9CA3AF">4 →</div>
+    </div><div class="person-row " onclick="filterPerson=&#39;HSE &amp; HR Team&#39;;activeTab=&#39;tasks&#39;;render()">
+      <div class="person-name">HSE &amp; HR</div>
+      <div class="person-badges">
+        
+        <span class="badge" style="background:#DBEAFE;color:#1E40AF">1 Devam</span>
+        
+      </div>
+      <div style="font-size:10px;color:#9CA3AF">1 →</div>
+    </div><div class="person-row " onclick="filterPerson=&#39;HSE Engineer Emre Hirik&#39;;activeTab=&#39;tasks&#39;;render()">
+      <div class="person-name">Emre H.</div>
+      <div class="person-badges">
+        
+        <span class="badge" style="background:#DBEAFE;color:#1E40AF">2 Devam</span>
+        
+      </div>
+      <div style="font-size:10px;color:#9CA3AF">2 →</div>
+    </div><div class="person-row " onclick="filterPerson=&#39;HSE Manager Salih KARTAL&#39;;activeTab=&#39;tasks&#39;;render()">
+      <div class="person-name">Salih K.</div>
+      <div class="person-badges">
+        
+        <span class="badge" style="background:#DBEAFE;color:#1E40AF">4 Devam</span>
+        
+      </div>
+      <div style="font-size:10px;color:#9CA3AF">4 →</div>
+    </div>
+  </div>
+      
+      
+    </div>
+    <div class="footer-note">🔄 Gerçek zamanlı senkron — Firebase Firestore</div>
+    
+  </div>
+<div class="toast" id="toast" style="display: none;">✅ Veriler yüklendi</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, setDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAfUkb3x3uHWjqBIUJ0o0N19EQK1bcHQfA",
+  authDomain: "hse-dashboard-e59e0.firebaseapp.com",
+  projectId: "hse-dashboard-e59e0",
+  storageBucket: "hse-dashboard-e59e0.firebasestorage.app",
+  messagingSenderId: "86437947257",
+  appId: "1:86437947257:web:a7c3efe66a7d43026831a8"
+};
+
+const fireapp = initializeApp(firebaseConfig);
+const db = getFirestore(fireapp);
+const COLL = "hse_tasks";
+
+const DEFAULT_TASKS = [
+  {id:"1",item:"HSE",task:"VAS Operasyonları planlı bakım - muayene periyotlarının belirlenmesi",priority:"Medium",responsible:"HSE Team",start:"2024-01-01",finish:"2024-02-15",completed:"",progress:0.75,status:"Delay",note:""},
+  {id:"2",item:"HSE",task:"Taşımacılık Eğitim Sunumu hazırlanacak (İSG + ADR + Yönetim Sistemleri)",priority:"Low",responsible:"HSE Chief Samet Nibat",start:"2024-01-01",finish:"2024-05-03",completed:"",progress:1,status:"Delay",note:""},
+  {id:"3",item:"HSE",task:"Depo Opr. Eğitim Sunumu hazırlanacak",priority:"Low",responsible:"HSE Team",start:"2024-01-01",finish:"2024-05-03",completed:"",progress:1,status:"Delay",note:""},
+  {id:"4",item:"HSE",task:"Eğitim değerlendirme soruları revize edilecek",priority:"Low",responsible:"HSE Team",start:"2024-01-01",finish:"2024-05-03",completed:"",progress:0.25,status:"Delay",note:""},
+  {id:"5",item:"HSE",task:"Fine Kinney metodu ile tüm RD'lerin güncellenmesi",priority:"Low",responsible:"HSE Team",start:"2024-10-25",finish:"2025-11-10",completed:"",progress:0.25,status:"Delay",note:""},
+  {id:"6",item:"HSE",task:"2024 yılı Kurul Toplantı Tutanaklarının Tamamlanması",priority:"Medium",responsible:"HSE Chief Samet Nibat",start:"2025-01-07",finish:"2025-05-30",completed:"",progress:0.75,status:"Delay",note:""},
+  {id:"7",item:"HSE",task:"Fiziki ve dijital dosyaların eksikliklerinin kontrolü",priority:"Medium",responsible:"HSE Team",start:"2025-06-16",finish:"2025-12-12",completed:"",progress:0.25,status:"Delay",note:""},
+  {id:"8",item:"ADR",task:"Tehlikeli Madde Taşımacılığı İşletme Denetimleri - Dosya Düzeni",priority:"High",responsible:"HSE Engineer A.Halit Şimşir",start:"2025-05-19",finish:"2025-07-11",completed:"",progress:0.75,status:"Delay",note:""},
+  {id:"9",item:"HSE",task:"Risk Değerlendirme Raporlarının dijital ortamda paylaşımı",priority:"Medium",responsible:"HSE Team",start:"2025-11-14",finish:"2025-12-15",completed:"",progress:0.25,status:"Delay",note:""},
+  {id:"10",item:"HSE",task:"ETP Güvenli Kaldırma ve Temizlik talimatı",priority:"Medium",responsible:"HSE Engineer Serkan Türkkan",start:"2025-09-23",finish:"2025-12-10",completed:"",progress:0.5,status:"Delay",note:""},
+  {id:"11",item:"HSE",task:"Servis araçları fiziki kontrolleri planlanması",priority:"High",responsible:"HSE Engineer Serkan Türkkan",start:"2025-10-17",finish:"2025-12-31",completed:"2025-12-31",progress:1,status:"Closed",note:""},
+  {id:"12",item:"HSE",task:"Tehlikeli İş İzin Sürecinde MEB-MYK yeterlilikleri",priority:"Medium",responsible:"HSE Engineer Büşra Sevim",start:"2025-09-20",finish:"2025-12-02",completed:"",progress:0.75,status:"Delay",note:""},
+  {id:"13",item:"HSE",task:"GNL_TLM_024 Boy Göz Duşu Kullanım Talimatı gözden geçirilmesi",priority:"Medium",responsible:"HSE Engineer A.Halit Şimşir",start:"2025-10-22",finish:"2025-12-05",completed:"",progress:1,status:"Delay",note:""},
+  {id:"14",item:"HSE",task:"SDS okuma ve Tesis Fiziki Özellikler Tablosu görüş alışverişi",priority:"Medium",responsible:"HSE Engineer Serkan Türkkan",start:"2025-10-24",finish:"2025-12-12",completed:"",progress:0.5,status:"Delay",note:""},
+  {id:"15",item:"HSE",task:"NACE kodu değişen tesislerin dokümantasyonlarında son durum",priority:"Medium",responsible:"HSE Chief Samet Nibat",start:"2025-06-18",finish:"2025-12-19",completed:"",progress:0.5,status:"Delay",note:""},
+  {id:"16",item:"HSE",task:"Karayolunda döküntü olayları için talimat hazırlanması",priority:"Low",responsible:"HSE Chief Samet Nibat",start:"2024-05-17",finish:"2024-10-01",completed:"",progress:0,status:"Delay",note:""},
+  {id:"20",item:"HSE",task:"İzmir Depo - Sıfır Atık Belgesi başvuru",priority:"Medium",responsible:"HSE Engineer Büşra Sevim",start:"2025-10-03",finish:"2026-02-06",completed:"2025-12-05",progress:0.75,status:"On-going",note:""},
+  {id:"21",item:"HSE",task:"İzmir Depo - ÇED ve Çevre İzin Süreci hk.",priority:"Medium",responsible:"HSE Engineer Büşra Sevim",start:"2025-08-08",finish:"2025-09-30",completed:"",progress:0.5,status:"Delay",note:""},
+  {id:"22",item:"HSE",task:"Mevlüt Çevik iş devri konularının çıkarılması",priority:"Medium",responsible:"HSE Engineer Mevlüt Çevik",start:"2025-10-08",finish:"2025-12-31",completed:"",progress:0.75,status:"Delay",note:""},
+  {id:"23",item:"HSE",task:"Sıfır Atık Sistemi Renk Skalası - Levha Çalışmaları",priority:"Medium",responsible:"HSE Chief Samet Nibat",start:"2025-10-21",finish:"2026-02-06",completed:"2025-11-28",progress:0.75,status:"On-going",note:""},
+  {id:"24",item:"HSE",task:"IFCO Temizlik Günü SEÇ Gözlemi ve talimatı",priority:"Medium",responsible:"HSE Engineer A.Halit Şimşir",start:"2025-10-31",finish:"2026-02-20",completed:"",progress:0.25,status:"Delay",note:""},
+  {id:"27",item:"HSE",task:"Sürücü Toolbox gündemi - WhatsApp grubu oluşturulması",priority:"Medium",responsible:"HSE Chief Samet Nibat",start:"2026-01-19",finish:"2026-03-13",completed:"",progress:0.25,status:"On-going",note:""},
+  {id:"30",item:"HSE",task:"BİR OSGB aylık koordinasyon toplantılarının organize edilmesi",priority:"Medium",responsible:"HSE Engineer Serkan Türkkan",start:"2026-01-19",finish:"2026-12-01",completed:"",progress:0.25,status:"On-going",note:""},
+  {id:"32",item:"HSE",task:"2026 yılı işyeri ortam ölçümleri planlanması ve SAY açılışları",priority:"Medium",responsible:"HSE Engineer Büşra Sevim",start:"2026-01-19",finish:"2026-02-20",completed:"",progress:0.75,status:"On-going",note:""},
+  {id:"36",item:"HSE",task:"2025 yılı Kurul Toplantı Tutanaklarının Tamamlanması",priority:"High",responsible:"HSE Team",start:"2026-02-06",finish:"2026-03-11",completed:"",progress:1,status:"On-going",note:""},
+  {id:"37",item:"HSE",task:"2025 yılı Tespit Öneri Defterlerinin tamamlanması",priority:"Medium",responsible:"HSE Team",start:"2026-01-19",finish:"2026-03-11",completed:"",progress:1,status:"On-going",note:""},
+  {id:"38",item:"HSE",task:"2025 yılı Yıllık Değerlendirme Raporları hazırlanması",priority:"High",responsible:"HSE Team",start:"2026-01-19",finish:"2026-03-11",completed:"",progress:1,status:"On-going",note:""},
+  {id:"39",item:"HSE",task:"2026 yılı Çalışma Planlarının hazırlanması",priority:"High",responsible:"HSE Team",start:"2026-01-01",finish:"2026-03-11",completed:"",progress:1,status:"On-going",note:""},
+  {id:"43",item:"HSE",task:"KKD Şartname Hazırlanması",priority:"High",responsible:"HSE Engineer Emre Hirik",start:"2026-01-23",finish:"2026-01-30",completed:"2026-01-30",progress:1,status:"On-going",note:""},
+  {id:"47",item:"ADR",task:"ADR Dokümantasyonları - UAB denetim sonrası değerlendirme",priority:"Medium",responsible:"HSE Chief Samet Nibat",start:"2026-01-23",finish:"2026-02-06",completed:"",progress:0.25,status:"On-going",note:""},
+  {id:"52",item:"HSE",task:"Beyaz Yaka Oryantasyon eğitim programının iyileştirilmesi",priority:"High",responsible:"HSE Manager Salih KARTAL",start:"2026-01-12",finish:"2026-03-09",completed:"",progress:0.25,status:"On-going",note:""},
+  {id:"53",item:"HSE",task:"Mavi/Beyaz Yaka Oryantasyon eğitim programının iyileştirilmesi",priority:"High",responsible:"HSE & HR Team",start:"2026-01-12",finish:"2026-03-09",completed:"",progress:0.25,status:"On-going",note:""},
+  {id:"54",item:"HSE",task:"Davranış Temelli Güvenlik (BBS) sistemi - Muallimköy ve Tuzla",priority:"Medium",responsible:"HSE Team",start:"2026-01-12",finish:"2026-04-01",completed:"",progress:0,status:"On-going",note:""},
+  {id:"57",item:"HSE",task:"Bülten hazırlığı (Şubat–Haziran 2026)",priority:"Medium",responsible:"HSE Engineer Mevlüt Çevik",start:"2026-02-20",finish:"2026-04-28",completed:"",progress:0.5,status:"On-going",note:""},
+  {id:"58",item:"HSE",task:"Güvenlik Planları Revize edilmesi",priority:"High",responsible:"HSE Engineer A.Halit Şimşir",start:"2026-05-01",finish:"2026-05-30",completed:"",progress:0.25,status:"On-going",note:""},
+  {id:"63",item:"HSE & ADR",task:"Numune alım ve gönderim talimatı hazırlanması",priority:"Medium",responsible:"HSE Engineer A.Halit Şimşir",start:"2026-03-13",finish:"2026-04-10",completed:"",progress:0,status:"Delay",note:""},
+  {id:"65",item:"Environment",task:"Sıfır Atık Denetimi aksiyonların takibi",priority:"Medium",responsible:"HSE Engineer Büşra Sevim",start:"2026-03-09",finish:"2026-04-01",completed:"",progress:1,status:"On-going",note:""},
+  {id:"67",item:"Environment",task:"IFCO 2. Makine kurulumu takip notları",priority:"Medium",responsible:"HSE Engineer A.Halit Şimşir",start:"2026-03-27",finish:"2026-07-01",completed:"",progress:0,status:"On-going",note:""},
+  {id:"68",item:"Environment",task:"Çevre Klasörünün Sharepointte düzenlenmesi",priority:"Medium",responsible:"HSE Engineer A.Halit Şimşir",start:"2026-03-27",finish:"",completed:"",progress:0,status:"On-going",note:""},
+  {id:"69",item:"Environment",task:"MOYDEN Başvurusunun yapılması",priority:"Medium",responsible:"HSE Chief Samet Nibat",start:"2026-03-27",finish:"2026-04-15",completed:"",progress:0,status:"On-going",note:""},
+  {id:"70",item:"Sedex",task:"Loreal SEDEX maddelerinin QDMS'e giriş ve takibi",priority:"Medium",responsible:"HSE Engineer Serkan Türkkan",start:"2026-05-11",finish:"2026-05-20",completed:"",progress:0,status:"On-going",note:""},
+  {id:"71",item:"Sedex",task:"Tuzla SEDEX maddelerinin QDMS'e giriş ve takibi",priority:"Medium",responsible:"HSE Engineer Büşra Sevim",start:"2026-05-11",finish:"2026-05-20",completed:"",progress:0,status:"On-going",note:""},
+  {id:"72",item:"Environment",task:"Muallimköy ÇED başvurusu süreci yeniden yapılacak",priority:"Medium",responsible:"HSE Engineer Büşra Sevim",start:"2026-05-11",finish:"",completed:"",progress:0,status:"On-going",note:""},
+  {id:"73",item:"Environment",task:"Pelitli Cobin Depo ÇED başvurusu takip",priority:"Medium",responsible:"HSE Engineer Serkan Türkkan",start:"2026-05-11",finish:"",completed:"",progress:0,status:"On-going",note:""},
+  {id:"74",item:"Environment",task:"YENİ Muallimköy Depo ÇED başvurusu başlatılacak",priority:"Medium",responsible:"HSE Manager Salih KARTAL",start:"2026-05-11",finish:"",completed:"",progress:0,status:"On-going",note:""},
+  {id:"75",item:"Environment",task:"Sakarya Arifiye 2 Depo (FORD) ÇED başvurusu",priority:"Medium",responsible:"HSE Manager Salih KARTAL",start:"2026-05-11",finish:"",completed:"",progress:0,status:"On-going",note:""},
+  {id:"76",item:"HSE",task:"Airliquide tatbikat senaryosu ve organizasyonu",priority:"Medium",responsible:"HSE Engineer Mevlüt Çevik",start:"2026-05-11",finish:"",completed:"",progress:0,status:"On-going",note:""},
+  {id:"77",item:"HSE",task:"Airliquide - Ödül/Ceza Sistemi, Güzergah Risk Analizi",priority:"Medium",responsible:"HSE Engineer Mevlüt Çevik",start:"2026-05-11",finish:"",completed:"",progress:0,status:"On-going",note:""},
+  {id:"78",item:"HSE",task:"DOW Mersin Tatlog WH Audit",priority:"Medium",responsible:"HSE Manager Salih KARTAL",start:"2026-05-11",finish:"",completed:"",progress:0,status:"On-going",note:""},
+  {id:"79",item:"HSE & Quality",task:"Entegre Denetim Aksiyonları Takibi",priority:"Medium",responsible:"HSE Team",start:"2026-05-11",finish:"2026-06-01",completed:"",progress:0,status:"On-going",note:""},
+  {id:"80",item:"HSE",task:"DOW ürünlerin IBC/Varil şişme sorunu - acil müdahale talimatı",priority:"Medium",responsible:"HSE Engineer Emre Hirik",start:"2026-05-12",finish:"2026-05-29",completed:"",progress:0,status:"On-going",note:""},
+];
+
+const SHORT = {
+  "HSE Team":"Tüm Ekip","HSE Manager Salih KARTAL":"Salih K.",
+  "HSE Chief Samet Nibat":"Samet N.","HSE Engineer A.Halit Şimşir":"A.Halit Ş.",
+  "HSE Engineer Büşra Sevim":"Büşra S.","HSE Engineer Serkan Türkkan":"Serkan T.",
+  "HSE Engineer Mevlüt Çevik":"Mevlüt Ç.","HSE Engineer Emre Hirik":"Emre H.",
+  "HSE Engineer Derya Kınalı":"Derya K.","HSE & HR Team":"HSE & HR"
+};
+const SC = {
+  "Delay":    {bg:"#FEE2E2",tx:"#991B1B",dot:"#EF4444",label:"⚠️ Gecikiyor"},
+  "On-going": {bg:"#DBEAFE",tx:"#1E40AF",dot:"#3B82F6",label:"🔵 Devam"},
+  "Closed":   {bg:"#D1FAE5",tx:"#065F46",dot:"#10B981",label:"✅ Kapandı"}
+};
+const PC = {"High":{bg:"#FEE2E2",tx:"#991B1B"},"Medium":{bg:"#FEF3C7",tx:"#92400E"},"Low":{bg:"#F3F4F6",tx:"#4B5563"}};
+const ORD={"Delay":0,"On-going":1,"Closed":2};
+const PORD={"High":0,"Medium":1,"Low":2};
+
+// ── State ────────────────────────────────────────────────────────────────
+let tasks = [];
+let syncStatus = "loading"; // loading | live | offline
+let activeTab = "dash";
+let filterPerson = "all";
+let filterStatus = "all";
+let filterPri = "all";
+let searchQ = "";
+let expandedId = null;
+let modalMode = null;
+let delTarget = null;
+let toastTimer = null;
+
+// ── Helpers ──────────────────────────────────────────────────────────────
+function sn(name){ return SHORT[name]||name.replace("HSE Engineer ","").replace("HSE ","").split(" ").slice(0,2).join(" "); }
+function badge(label,bg,tx){ return `<span class="badge" style="background:${bg};color:${tx}">${label}</span>`; }
+function progressBar(val){
+  const p=Math.round(val*100);
+  const c=p===100?"#10B981":p>=50?"#3B82F6":"#F59E0B";
+  return `<div class="bar-wrap"><div class="bar-track"><div class="bar-fill" style="width:${p}%;background:${c}"></div></div><span class="bar-pct">${p}%</span></div>`;
+}
+function showToast(msg){
+  const el=document.getElementById("toast");
+  el.textContent=msg; el.style.display="block";
+  if(toastTimer) clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.style.display="none",2500);
+}
+function getFiltered(){
+  return tasks
+    .filter(t=>filterPerson==="all"||t.responsible===filterPerson)
+    .filter(t=>filterStatus==="all"||t.status===filterStatus)
+    .filter(t=>filterPri==="all"||t.priority===filterPri)
+    .filter(t=>!searchQ||t.task.toLowerCase().includes(searchQ.toLowerCase())||
+      t.responsible.toLowerCase().includes(searchQ.toLowerCase())||
+      (t.note||"").toLowerCase().includes(searchQ.toLowerCase()))
+    .sort((a,b)=>(ORD[a.status]-ORD[b.status])||(PORD[a.priority]-PORD[b.priority]));
+}
+function getAllPersons(){ return [...new Set(tasks.map(t=>t.responsible))].sort(); }
+function getPersonStats(){
+  return getAllPersons().map(p=>{
+    const m=tasks.filter(t=>t.responsible===p);
+    return{name:p,total:m.length,
+      delay:m.filter(t=>t.status==="Delay").length,
+      ongoing:m.filter(t=>t.status==="On-going").length,
+      closed:m.filter(t=>t.status==="Closed").length};
+  }).filter(p=>p.total>0).sort((a,b)=>b.delay-a.delay);
+}
+
+// ── Firebase CRUD ────────────────────────────────────────────────────────
+async function seedIfEmpty(){
+  const snap = await getDocs(collection(db, COLL));
+  if(snap.empty){
+    showToast("⏳ İlk yükleme yapılıyor...");
+    for(const t of DEFAULT_TASKS){
+      await setDoc(doc(db, COLL, t.id), t);
+    }
+    showToast("✅ Veriler yüklendi");
+  }
+}
+
+async function fbAdd(data){
+  const id = Date.now().toString();
+  await setDoc(doc(db, COLL, id), {...data, id});
+  showToast("✅ Görev eklendi");
+}
+async function fbUpdate(id, data){
+  await updateDoc(doc(db, COLL, id), data);
+  showToast("✅ Güncellendi");
+}
+async function fbDelete(id){
+  await deleteDoc(doc(db, COLL, id));
+  showToast("🗑️ Silindi");
+}
+
+// ── Quick status ─────────────────────────────────────────────────────────
+window.quickStatus = async (id, status) => {
+  const t = tasks.find(x=>x.id===id);
+  if(!t) return;
+  const completed = status==="Closed"&&!t.completed ? new Date().toISOString().slice(0,10) : t.completed;
+  await fbUpdate(id, {status, completed});
+};
+
+// ── Modal ────────────────────────────────────────────────────────────────
+window.openModal = (t) => { modalMode = t==="new" ? "new" : {...t}; render(); };
+window.closeModal = () => { modalMode=null; render(); };
+window.saveModal = async (editId) => {
+  const task=document.getElementById("m_task").value.trim();
+  if(!task){alert("Görev açıklaması zorunludur");return;}
+  const obj={task,item:document.getElementById("m_item").value,
+    priority:document.getElementById("m_priority").value,
+    responsible:document.getElementById("m_responsible").value,
+    start:document.getElementById("m_start").value,
+    finish:document.getElementById("m_finish").value,
+    completed:document.getElementById("m_completed").value,
+    progress:parseInt(document.getElementById("m_progress").value)/100,
+    status:document.getElementById("m_status").value,
+    note:document.getElementById("m_note").value};
+  if(editId===null){ await fbAdd(obj); }
+  else { await fbUpdate(editId, obj); }
+  modalMode=null; render();
+};
+window.confirmDel = (id) => { delTarget=tasks.find(t=>t.id===id); render(); };
+window.cancelDel = () => { delTarget=null; render(); };
+window.execDel = async (id) => { delTarget=null; render(); await fbDelete(id); };
+
+function renderModal(){
+  if(!modalMode) return "";
+  const isNew=modalMode==="new";
+  const f=isNew?{item:"HSE",task:"",priority:"Medium",responsible:"HSE Team",start:"",finish:"",completed:"",progress:0,status:"On-going",note:""}:modalMode;
+  const pct=Math.round((f.progress||0)*100);
+  const persons=getAllPersons();
+  const popts=persons.map(p=>`<option value="${p}"${f.responsible===p?" selected":""}>${sn(p)} — ${p}</option>`).join("");
+  return `<div class="modal-bg" id="modal-bg">
+  <div class="modal">
+    <div style="font-weight:700;font-size:16px;color:#1E3A5F;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">
+      <span>${isNew?"➕ Yeni Görev":"✏️ Görevi Düzenle"}</span>
+      <button onclick="closeModal()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#9CA3AF">✕</button>
+    </div>
+    <div class="field"><label>Görev Açıklaması *</label><textarea id="m_task" rows="3">${f.task}</textarea></div>
+    <div class="field-row">
+      <div class="field"><label>Kategori</label><select id="m_item">
+        ${["HSE","ADR","Environment","Sedex","HSE & ADR","HSE & Quality"].map(v=>`<option${f.item===v?" selected":""}>${v}</option>`).join("")}
+      </select></div>
+      <div class="field"><label>Öncelik</label><select id="m_priority">
+        <option value="High"${f.priority==="High"?" selected":""}>🔴 High</option>
+        <option value="Medium"${f.priority==="Medium"?" selected":""}>🟡 Medium</option>
+        <option value="Low"${f.priority==="Low"?" selected":""}>⚪ Low</option>
+      </select></div>
+    </div>
+    <div class="field"><label>Sorumlu</label><select id="m_responsible">${popts}</select></div>
+    <div class="field-row">
+      <div class="field"><label>Başlangıç</label><input type="date" id="m_start" value="${f.start||""}"></div>
+      <div class="field"><label>Bitiş</label><input type="date" id="m_finish" value="${f.finish||""}"></div>
+    </div>
+    <div class="field"><label>Tamamlanma Tarihi</label><input type="date" id="m_completed" value="${f.completed||""}"></div>
+    <div class="field">
+      <label>İlerleme: <strong id="pct_label">${pct}%</strong></label>
+      <input type="range" id="m_progress" min="0" max="100" step="5" value="${pct}"
+        oninput="document.getElementById('pct_label').textContent=this.value+'%'" style="width:100%">
+      <div class="range-labels"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>
+    </div>
+    <div class="field"><label>Durum</label><select id="m_status">
+      <option value="On-going"${f.status==="On-going"?" selected":""}>🔵 Devam Ediyor</option>
+      <option value="Delay"${f.status==="Delay"?" selected":""}>⚠️ Gecikiyor</option>
+      <option value="Closed"${f.status==="Closed"?" selected":""}>✅ Kapandı</option>
+    </select></div>
+    <div class="field"><label>Not / Güncelleme</label><textarea id="m_note" rows="2">${f.note||""}</textarea></div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">İptal</button>
+      <button class="btn-save" onclick="saveModal(${isNew?"null":`'${f.id}'`})">${isNew?"Ekle":"Kaydet"}</button>
+    </div>
+  </div></div>`;
+}
+
+function renderDelConfirm(){
+  if(!delTarget) return "";
+  return `<div class="modal-bg">
+  <div class="modal" style="max-width:360px">
+    <div style="font-weight:700;font-size:16px;color:#991B1B;margin-bottom:10px">🗑️ Görevi Sil</div>
+    <div style="font-size:13px;color:#374151;margin-bottom:18px;line-height:1.5">"<strong>${delTarget.task}</strong>" silinecek. Geri alınamaz.</div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="cancelDel()">İptal</button>
+      <button class="btn-del-confirm" onclick="execDel('${delTarget.id}')">Sil</button>
+    </div>
+  </div></div>`;
+}
+
+// ── Render sections ───────────────────────────────────────────────────────
+function renderDash(){
+  const delay=tasks.filter(t=>t.status==="Delay");
+  const ongoing=tasks.filter(t=>t.status==="On-going");
+  const closed=tasks.filter(t=>t.status==="Closed");
+  const highDelay=delay.filter(t=>t.priority==="High");
+  const pStats=getPersonStats();
+  const sc=(l,v,c,s)=>`<div class="stat" style="border-left:4px solid ${c}">
+    <div class="stat-val" style="color:${c}">${v}</div>
+    <div class="stat-label">${l}</div>${s?`<div class="stat-sub">${s}</div>`:""}
+  </div>`;
+  const alert=highDelay.length?`<div class="alert-box">
+    <div class="alert-title">🚨 Yüksek Öncelikli Geciken Görevler (${highDelay.length})</div>
+    ${highDelay.map(t=>`<div class="alert-row">
+      <div style="color:#991B1B;flex:1">${t.task}</div>
+      <div style="display:flex;gap:5px;align-items:center;flex-shrink:0">
+        <span style="color:#6B7280;font-size:11px">${sn(t.responsible)}</span>
+        <button class="btn-qs" style="background:#DBEAFE;color:#1E40AF" onclick="quickStatus('${t.id}','On-going')">▶ Devama Al</button>
+        <button class="btn-qs" style="background:#D1FAE5;color:#065F46" onclick="quickStatus('${t.id}','Closed')">✓ Kapat</button>
+      </div></div>`).join("")}
+  </div>`:"";
+  const team=`<div class="card" style="padding:13px 15px">
+    <div style="font-weight:700;color:#1E3A5F;margin-bottom:10px;font-size:14px">👤 Ekip Yükü</div>
+    ${pStats.map(p=>`<div class="person-row ${p.delay>0?"has-delay":""}"
+      onclick="filterPerson='${p.name}';activeTab='tasks';render()">
+      <div class="person-name">${sn(p.name)}</div>
+      <div class="person-badges">
+        ${p.delay>0?badge(p.delay+" Geciken","#FEE2E2","#991B1B"):""}
+        ${p.ongoing>0?badge(p.ongoing+" Devam","#DBEAFE","#1E40AF"):""}
+        ${p.closed>0?badge(p.closed+" Kapandı","#D1FAE5","#065F46"):""}
+      </div>
+      <div style="font-size:10px;color:#9CA3AF">${p.total} →</div>
+    </div>`).join("")}
+  </div>`;
+  return `<div class="stat-row">
+    ${sc("Geciken",delay.length,"#EF4444",highDelay.length+" High öncelikli")}
+    ${sc("Devam Eden",ongoing.length,"#3B82F6","Aktif görevler")}
+    ${sc("Kapandı",closed.length,"#10B981","Tamamlanan")}
+    ${sc("Toplam",tasks.length,"#8B5CF6","Tüm görevler")}
+  </div>${alert}${team}`;
+}
+
+function renderTasks(){
+  const filtered=getFiltered();
+  const persons=getAllPersons();
+  const hasFilter=filterPerson!=="all"||filterStatus!=="all"||filterPri!=="all"||searchQ;
+  const filters=`<div class="filters">
+    <input class="filter-input" placeholder="🔍  Ara..." value="${searchQ}" oninput="searchQ=this.value;render()">
+    <select class="filter-select" onchange="filterPerson=this.value;render()">
+      <option value="all">Tüm Kişiler</option>
+      ${persons.map(p=>`<option value="${p}"${filterPerson===p?" selected":""}>${SHORT[p]||p}</option>`).join("")}
+    </select>
+    <select class="filter-select" onchange="filterStatus=this.value;render()">
+      <option value="all">Tüm Durumlar</option>
+      <option value="Delay"${filterStatus==="Delay"?" selected":""}>⚠️ Gecikiyor</option>
+      <option value="On-going"${filterStatus==="On-going"?" selected":""}>🔵 Devam</option>
+      <option value="Closed"${filterStatus==="Closed"?" selected":""}>✅ Kapandı</option>
+    </select>
+    <select class="filter-select" onchange="filterPri=this.value;render()">
+      <option value="all">Tüm Öncelikler</option>
+      <option value="High"${filterPri==="High"?" selected":""}>🔴 High</option>
+      <option value="Medium"${filterPri==="Medium"?" selected":""}>🟡 Medium</option>
+      <option value="Low"${filterPri==="Low"?" selected":""}>⚪ Low</option>
+    </select>
+    ${hasFilter?`<button class="btn-clear" onclick="filterPerson='all';filterStatus='all';filterPri='all';searchQ='';render()">✕ Temizle</button>`:""}
+  </div>`;
+  const cards=filtered.length===0
+    ?`<div style="text-align:center;padding:40px;color:#9CA3AF;font-size:13px">Görev bulunamadı.</div>`
+    :filtered.map(t=>{
+      const sc=SC[t.status]||SC["On-going"];
+      const pc=PC[t.priority]||PC.Medium;
+      const isExp=expandedId===t.id;
+      const detail=isExp?`<div class="task-detail">
+        <div><strong>Sorumlu:</strong> ${t.responsible}</div>
+        <div><strong>Başlangıç:</strong> ${t.start||"—"} → <strong>Bitiş:</strong> ${t.finish||"—"}</div>
+        ${t.completed?`<div><strong>Tamamlandı:</strong> ${t.completed}</div>`:""}
+        <div><strong>Kategori:</strong> ${t.item}</div>
+        ${t.note?`<div class="task-note"><strong>Not:</strong> ${t.note}</div>`:""}
+        <div class="quick-btns">
+          <button class="btn-qs" style="background:#DBEAFE;color:#1E40AF" onclick="event.stopPropagation();quickStatus('${t.id}','On-going')">🔵 Devam</button>
+          <button class="btn-qs" style="background:#FEE2E2;color:#991B1B" onclick="event.stopPropagation();quickStatus('${t.id}','Delay')">⚠️ Gecikiyor</button>
+          <button class="btn-qs" style="background:#D1FAE5;color:#065F46" onclick="event.stopPropagation();quickStatus('${t.id}','Closed')">✅ Kapat</button>
+        </div></div>`:"";
+      return `<div class="card"><div class="card-inner">
+        <div class="task-row">
+          <div style="flex:1;cursor:pointer" onclick="expandedId=${isExp?"null":`'${t.id}'`};render()">
+            <div class="task-text">${t.task}</div>
+            ${detail}${progressBar(t.progress)}
+          </div>
+          <div class="task-badges">
+            ${badge(sc.label,sc.bg,sc.tx)}${badge(t.priority,pc.bg,pc.tx)}
+            <span style="font-size:10px;color:#9CA3AF;text-align:right;margin-top:2px">${sn(t.responsible)}</span>
+            <div class="task-actions">
+              <button class="btn-edit" onclick="openModal(tasks.find(x=>x.id==='${t.id}'))">✏️</button>
+              <button class="btn-del" onclick="confirmDel('${t.id}')">🗑️</button>
+            </div>
+          </div>
+        </div>
+      </div></div>`;
+    }).join("");
+  return filters+cards;
+}
+
+function renderTeam(){
+  return getPersonStats().map(p=>{
+    const mine=tasks.filter(t=>t.responsible===p.name)
+      .sort((a,b)=>(ORD[a.status]-ORD[b.status])||(PORD[a.priority]-PORD[b.priority]));
+    return `<div class="team-card">
+      <div class="team-header ${p.delay>0?"warn":"ok"}">
+        <div><strong style="font-size:14px;color:#1E3A5F">${sn(p.name)}</strong>
+          <span style="font-size:11px;color:#9CA3AF;margin-left:6px">${p.name}</span></div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap">
+          ${p.delay>0?badge(p.delay+" Geciken","#FEE2E2","#991B1B"):""}
+          ${p.ongoing>0?badge(p.ongoing+" Devam","#DBEAFE","#1E40AF"):""}
+          ${p.closed>0?badge(p.closed+" Kapandı","#D1FAE5","#065F46"):""}
+        </div>
+      </div>
+      <div class="team-body">
+        ${mine.map(t=>{const sc=SC[t.status]||SC["On-going"];return`<div class="team-task-row ${t.status==="Delay"?"delay":"normal"}">
+          <div class="dot" style="background:${sc.dot}"></div>
+          <div style="flex:1;font-size:12px;color:#374151;line-height:1.3">${t.task}</div>
+          <div style="min-width:65px">${progressBar(t.progress)}</div>
+          <button class="btn-edit" onclick="openModal(tasks.find(x=>x.id==='${t.id}'))">✏️</button>
+        </div>`;}).join("")}
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function render(){
+  const filtered=getFiltered();
+  const dotClass=syncStatus==="live"?"live":syncStatus==="loading"?"loading":"offline";
+  const dotLabel=syncStatus==="live"?"Canlı":syncStatus==="loading"?"Bağlanıyor...":"Bağlantı yok";
+  const tabBtn=(id,label,cnt)=>`<button class="tab ${activeTab===id?"active":""}" onclick="activeTab='${id}';render()">
+    ${label}${cnt!=null?`<span class="cnt">${cnt}</span>`:""}
+  </button>`;
+  document.getElementById("app").innerHTML=`
+    <div class="header">
+      <div>
+        <div class="header-sub">Alışan Lojistik</div>
+        <div class="header-title">HSE Team — Görev Takip Paneli</div>
+      </div>
+      <div class="header-btns">
+        <span style="color:rgba(255,255,255,.8);font-size:12px">
+          <span class="sync-dot ${dotClass}"></span>${dotLabel}
+        </span>
+        <button class="btn-gold" onclick="openModal('new')">+ Yeni Görev</button>
+      </div>
+    </div>
+    <div class="tabs">
+      ${tabBtn("dash","📊 Dashboard")}
+      ${tabBtn("tasks","📋 Görev Listesi",filtered.length)}
+      ${tabBtn("team","👤 Ekip Bazlı")}
+    </div>
+    <div id="content">
+      ${activeTab==="dash"?renderDash():""}
+      ${activeTab==="tasks"?renderTasks():""}
+      ${activeTab==="team"?renderTeam():""}
+    </div>
+    <div class="footer-note">🔄 Gerçek zamanlı senkron — Firebase Firestore</div>
+    ${renderModal()}${renderDelConfirm()}
+  `;
+}
+
+// ── Firebase realtime listener ────────────────────────────────────────────
+window.tasks = tasks;
+await seedIfEmpty();
+
+onSnapshot(collection(db, COLL),
+  (snap) => {
+    tasks = snap.docs.map(d=>d.data()).sort((a,b)=>(ORD[a.status]-ORD[b.status])||(PORD[a.priority]-PORD[b.priority]));
+    window.tasks = tasks;
+    syncStatus = "live";
+    render();
+  },
+  (err) => {
+    console.error(err);
+    syncStatus = "offline";
+    render();
+    showToast("⚠️ Bağlantı hatası");
+  }
+);
+</script>
+
+
+</body></html>
