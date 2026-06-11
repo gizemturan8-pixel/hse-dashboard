@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0060)file:///C:/Users/Gizem/Downloads/HSE_Dashboard_Firebase.index.html -->
+<!-- saved from url=(0062)file:///C:/Users/Gizem/Downloads/HSE_Dashboard_Firebase_1.html -->
 <html lang="tr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -102,13 +102,13 @@ button,select,input,textarea{font-family:inherit}
       </div>
     </div>
     <div class="tabs">
-      <button class="tab active" onclick="activeTab=&#39;dash&#39;;render()">
+      <button class="tab active" onclick="setTab(&#39;dash&#39;)">
     📊 Dashboard
   </button>
-      <button class="tab " onclick="activeTab=&#39;tasks&#39;;render()">
+      <button class="tab " onclick="setTab(&#39;tasks&#39;)">
     📋 Görev Listesi<span class="cnt">51</span>
   </button>
-      <button class="tab " onclick="activeTab=&#39;team&#39;;render()">
+      <button class="tab " onclick="setTab(&#39;team&#39;)">
     👤 Ekip Bazlı
   </button>
     </div>
@@ -141,7 +141,7 @@ button,select,input,textarea{font-family:inherit}
       </div></div>
   </div><div class="card" style="padding:13px 15px">
     <div style="font-weight:700;color:#1E3A5F;margin-bottom:10px;font-size:14px">👤 Ekip Yükü</div>
-    <div class="person-row has-delay" onclick="filterPerson=&#39;HSE Team&#39;;activeTab=&#39;tasks&#39;;render()">
+    <div class="person-row has-delay" onclick="setFilterPerson(&#39;HSE Team&#39;;activeTab=&#39;tasks&#39;)">
       <div class="person-name">Tüm Ekip</div>
       <div class="person-badges">
         <span class="badge" style="background:#FEE2E2;color:#991B1B">6 Geciken</span>
@@ -149,7 +149,7 @@ button,select,input,textarea{font-family:inherit}
         
       </div>
       <div style="font-size:10px;color:#9CA3AF">12 →</div>
-    </div><div class="person-row has-delay" onclick="filterPerson=&#39;HSE Chief Samet Nibat&#39;;activeTab=&#39;tasks&#39;;render()">
+    </div><div class="person-row has-delay" onclick="setFilterPerson(&#39;HSE Chief Samet Nibat&#39;;activeTab=&#39;tasks&#39;)">
       <div class="person-name">Samet N.</div>
       <div class="person-badges">
         <span class="badge" style="background:#FEE2E2;color:#991B1B">4 Geciken</span>
@@ -157,7 +157,7 @@ button,select,input,textarea{font-family:inherit}
         
       </div>
       <div style="font-size:10px;color:#9CA3AF">8 →</div>
-    </div><div class="person-row has-delay" onclick="filterPerson=&#39;HSE Engineer A.Halit Şimşir&#39;;activeTab=&#39;tasks&#39;;render()">
+    </div><div class="person-row has-delay" onclick="setFilterPerson(&#39;HSE Engineer A.Halit Şimşir&#39;;activeTab=&#39;tasks&#39;)">
       <div class="person-name">A.Halit Ş.</div>
       <div class="person-badges">
         <span class="badge" style="background:#FEE2E2;color:#991B1B">4 Geciken</span>
@@ -165,7 +165,7 @@ button,select,input,textarea{font-family:inherit}
         
       </div>
       <div style="font-size:10px;color:#9CA3AF">7 →</div>
-    </div><div class="person-row has-delay" onclick="filterPerson=&#39;HSE Engineer Büşra Sevim&#39;;activeTab=&#39;tasks&#39;;render()">
+    </div><div class="person-row has-delay" onclick="setFilterPerson(&#39;HSE Engineer Büşra Sevim&#39;;activeTab=&#39;tasks&#39;)">
       <div class="person-name">Büşra S.</div>
       <div class="person-badges">
         <span class="badge" style="background:#FEE2E2;color:#991B1B">2 Geciken</span>
@@ -173,7 +173,7 @@ button,select,input,textarea{font-family:inherit}
         
       </div>
       <div style="font-size:10px;color:#9CA3AF">7 →</div>
-    </div><div class="person-row has-delay" onclick="filterPerson=&#39;HSE Engineer Serkan Türkkan&#39;;activeTab=&#39;tasks&#39;;render()">
+    </div><div class="person-row has-delay" onclick="setFilterPerson(&#39;HSE Engineer Serkan Türkkan&#39;;activeTab=&#39;tasks&#39;)">
       <div class="person-name">Serkan T.</div>
       <div class="person-badges">
         <span class="badge" style="background:#FEE2E2;color:#991B1B">2 Geciken</span>
@@ -181,7 +181,7 @@ button,select,input,textarea{font-family:inherit}
         <span class="badge" style="background:#D1FAE5;color:#065F46">1 Kapandı</span>
       </div>
       <div style="font-size:10px;color:#9CA3AF">6 →</div>
-    </div><div class="person-row has-delay" onclick="filterPerson=&#39;HSE Engineer Mevlüt Çevik&#39;;activeTab=&#39;tasks&#39;;render()">
+    </div><div class="person-row has-delay" onclick="setFilterPerson(&#39;HSE Engineer Mevlüt Çevik&#39;;activeTab=&#39;tasks&#39;)">
       <div class="person-name">Mevlüt Ç.</div>
       <div class="person-badges">
         <span class="badge" style="background:#FEE2E2;color:#991B1B">1 Geciken</span>
@@ -189,7 +189,7 @@ button,select,input,textarea{font-family:inherit}
         
       </div>
       <div style="font-size:10px;color:#9CA3AF">4 →</div>
-    </div><div class="person-row " onclick="filterPerson=&#39;HSE &amp; HR Team&#39;;activeTab=&#39;tasks&#39;;render()">
+    </div><div class="person-row " onclick="setFilterPerson(&#39;HSE &amp; HR Team&#39;;activeTab=&#39;tasks&#39;)">
       <div class="person-name">HSE &amp; HR</div>
       <div class="person-badges">
         
@@ -197,7 +197,7 @@ button,select,input,textarea{font-family:inherit}
         
       </div>
       <div style="font-size:10px;color:#9CA3AF">1 →</div>
-    </div><div class="person-row " onclick="filterPerson=&#39;HSE Engineer Emre Hirik&#39;;activeTab=&#39;tasks&#39;;render()">
+    </div><div class="person-row " onclick="setFilterPerson(&#39;HSE Engineer Emre Hirik&#39;;activeTab=&#39;tasks&#39;)">
       <div class="person-name">Emre H.</div>
       <div class="person-badges">
         
@@ -205,7 +205,7 @@ button,select,input,textarea{font-family:inherit}
         
       </div>
       <div style="font-size:10px;color:#9CA3AF">2 →</div>
-    </div><div class="person-row " onclick="filterPerson=&#39;HSE Manager Salih KARTAL&#39;;activeTab=&#39;tasks&#39;;render()">
+    </div><div class="person-row " onclick="setFilterPerson(&#39;HSE Manager Salih KARTAL&#39;;activeTab=&#39;tasks&#39;)">
       <div class="person-name">Salih K.</div>
       <div class="person-badges">
         
@@ -221,7 +221,7 @@ button,select,input,textarea{font-family:inherit}
     <div class="footer-note">🔄 Gerçek zamanlı senkron — Firebase Firestore</div>
     
   </div>
-<div class="toast" id="toast" style="display: none;">✅ Veriler yüklendi</div>
+<div class="toast" id="toast"></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -312,7 +312,7 @@ const PORD={"High":0,"Medium":1,"Low":2};
 
 // ── State ────────────────────────────────────────────────────────────────
 let tasks = [];
-let syncStatus = "loading"; // loading | live | offline
+let syncStatus = "loading";
 let activeTab = "dash";
 let filterPerson = "all";
 let filterStatus = "all";
@@ -322,6 +322,15 @@ let expandedId = null;
 let modalMode = null;
 let delTarget = null;
 let toastTimer = null;
+
+// Global erişim (type=module scope sorunu için)
+window.setTab = (t) => { activeTab=t; render(); };
+window.setFilterPerson = (v) => { filterPerson=v; render(); };
+window.setFilterStatus = (v) => { filterStatus=v; render(); };
+window.setFilterPri = (v) => { filterPri=v; render(); };
+window.setSearch = (v) => { searchQ=v; render(); };
+window.clearFilters = () => { filterPerson="all"; filterStatus="all"; filterPri="all"; searchQ=""; render(); };
+window.toggleExpand = (id) => { expandedId = expandedId===id ? null : id; render(); };
 
 // ── Helpers ──────────────────────────────────────────────────────────────
 function sn(name){ return SHORT[name]||name.replace("HSE Engineer ","").replace("HSE ","").split(" ").slice(0,2).join(" "); }
@@ -501,7 +510,7 @@ function renderDash(){
   const team=`<div class="card" style="padding:13px 15px">
     <div style="font-weight:700;color:#1E3A5F;margin-bottom:10px;font-size:14px">👤 Ekip Yükü</div>
     ${pStats.map(p=>`<div class="person-row ${p.delay>0?"has-delay":""}"
-      onclick="filterPerson='${p.name}';activeTab='tasks';render()">
+      onclick="setFilterPerson('${p.name}';activeTab='tasks')">
       <div class="person-name">${sn(p.name)}</div>
       <div class="person-badges">
         ${p.delay>0?badge(p.delay+" Geciken","#FEE2E2","#991B1B"):""}
@@ -524,24 +533,24 @@ function renderTasks(){
   const persons=getAllPersons();
   const hasFilter=filterPerson!=="all"||filterStatus!=="all"||filterPri!=="all"||searchQ;
   const filters=`<div class="filters">
-    <input class="filter-input" placeholder="🔍  Ara..." value="${searchQ}" oninput="searchQ=this.value;render()">
-    <select class="filter-select" onchange="filterPerson=this.value;render()">
+    <input class="filter-input" placeholder="🔍  Ara..." value="${searchQ}" oninput="setSearch(this.value)">
+    <select class="filter-select" onchange="setFilterPerson(this.value)">
       <option value="all">Tüm Kişiler</option>
       ${persons.map(p=>`<option value="${p}"${filterPerson===p?" selected":""}>${SHORT[p]||p}</option>`).join("")}
     </select>
-    <select class="filter-select" onchange="filterStatus=this.value;render()">
+    <select class="filter-select" onchange="setFilterStatus(this.value)">
       <option value="all">Tüm Durumlar</option>
       <option value="Delay"${filterStatus==="Delay"?" selected":""}>⚠️ Gecikiyor</option>
       <option value="On-going"${filterStatus==="On-going"?" selected":""}>🔵 Devam</option>
       <option value="Closed"${filterStatus==="Closed"?" selected":""}>✅ Kapandı</option>
     </select>
-    <select class="filter-select" onchange="filterPri=this.value;render()">
+    <select class="filter-select" onchange="setFilterPri(this.value)">
       <option value="all">Tüm Öncelikler</option>
       <option value="High"${filterPri==="High"?" selected":""}>🔴 High</option>
       <option value="Medium"${filterPri==="Medium"?" selected":""}>🟡 Medium</option>
       <option value="Low"${filterPri==="Low"?" selected":""}>⚪ Low</option>
     </select>
-    ${hasFilter?`<button class="btn-clear" onclick="filterPerson='all';filterStatus='all';filterPri='all';searchQ='';render()">✕ Temizle</button>`:""}
+    ${hasFilter?`<button class="btn-clear" onclick="setFilterPerson('all';filterStatus='all';filterPri='all';searchQ='')">✕ Temizle</button>`:""}
   </div>`;
   const cards=filtered.length===0
     ?`<div style="text-align:center;padding:40px;color:#9CA3AF;font-size:13px">Görev bulunamadı.</div>`
@@ -562,7 +571,7 @@ function renderTasks(){
         </div></div>`:"";
       return `<div class="card"><div class="card-inner">
         <div class="task-row">
-          <div style="flex:1;cursor:pointer" onclick="expandedId=${isExp?"null":`'${t.id}'`};render()">
+          <div style="flex:1;cursor:pointer" onclick="toggleExpand('${t.id}')">
             <div class="task-text">${t.task}</div>
             ${detail}${progressBar(t.progress)}
           </div>
@@ -606,11 +615,11 @@ function renderTeam(){
   }).join("");
 }
 
-function render(){
+window.render = function render(){
   const filtered=getFiltered();
   const dotClass=syncStatus==="live"?"live":syncStatus==="loading"?"loading":"offline";
   const dotLabel=syncStatus==="live"?"Canlı":syncStatus==="loading"?"Bağlanıyor...":"Bağlantı yok";
-  const tabBtn=(id,label,cnt)=>`<button class="tab ${activeTab===id?"active":""}" onclick="activeTab='${id}';render()">
+  const tabBtn=(id,label,cnt)=>`<button class="tab ${activeTab===id?"active":""}" onclick="setTab('${id}')">
     ${label}${cnt!=null?`<span class="cnt">${cnt}</span>`:""}
   </button>`;
   document.getElementById("app").innerHTML=`
